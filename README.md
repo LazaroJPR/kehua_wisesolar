@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="icon.jpg" alt="Kehua Tech Logo" width="200"/>
+  <img src="icon.png" alt="Kehua Tech Logo" width="200"/>
 </p>
 
 <h1 align="center">Kehua WiseSolar – Home Assistant Integration</h1>
