@@ -4,8 +4,8 @@
   "codeowners": ["@lazarojpr"],
   "config_flow": true,
   "documentation": "https://github.com/lazarojpr/kehua_wisesolar",
-  "issue_tracker": "https://github.com/lazarojpr/kehua_wisesolar/issues",
   "integration_type": "hub",
   "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/lazarojpr/kehua_wisesolar/issues",
   "version": "1.2.0"
 }
