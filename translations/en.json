@@ -1,0 +1,22 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Kehua WiseSolar",
+        "description": "Enter your WiseSolar app credentials.",
+        "data": {
+          "username": "Phone / Username",
+          "password": "Password",
+          "station_id": "Plant ID (Optional - leave blank for auto-discovery)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not connect to WiseSolar servers.",
+      "invalid_auth": "Invalid username or password."
+    },
+    "abort": {
+      "already_configured": "This WiseSolar account is already configured."
+    }
+  }
+}

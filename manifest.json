@@ -1,0 +1,10 @@
+{
+  "domain": "kehua_wisesolar",
+  "name": "Kehua WiseSolar",
+  "codeowners": ["@lazarojpr"],
+  "config_flow": true,
+  "documentation": "https://energy.kehua.com",
+  "integration_type": "hub",
+  "iot_class": "cloud_polling",
+  "version": "1.0.0"
+}
