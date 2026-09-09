@@ -6,5 +6,5 @@
   "documentation": "https://energy.kehua.com",
   "integration_type": "hub",
   "iot_class": "cloud_polling",
-  "version": "1.1.0"
+  "version": "1.2.0"
 }

@@ -145,8 +145,31 @@ This integration is designed to work seamlessly out-of-the-box with the Home Ass
 | `sensor.temperatura_do_dissipador` | °C | `temperature` | Inverter heatsink/radiator temperature |
 | `sensor.horas_de_operacao` | h | `duration` | Total inverter operational hours |
 | `sensor.status_do_inversor` | — | — | Status (Normal / Offline / Abnormal) |
+| `sensor.alerta_ativo` | — | — | Active alarm name (or "Nenhum") with cause attributes |
+| `sensor.quantidade_de_alertas` | — | — | Total count of active unsolved alarms |
 
 ---
+
+## 🔔 Setting Up Notifications for Inverter Alerts
+
+You can easily configure Home Assistant to send a push notification to your phone whenever the inverter status changes from `Normal` to `Abnormal` or `Offline`:
+
+```yaml
+alias: "Kehua Solar: Alerta no Inversor"
+trigger:
+  - platform: state
+    entity_id: sensor.status_do_inversor
+    from: "Normal"
+condition: []
+action:
+  - service: notify.notify
+    data:
+      title: "⚠️ Alerta no Inversor Solar"
+      message: >
+        O inversor Kehua mudou de status para {{ states('sensor.status_do_inversor') }}.
+        Motivo: {{ state_attr('sensor.alerta_ativo', 'motivo_alerta') }} (Código: {{ state_attr('sensor.alerta_ativo', 'codigo_evento') }}).
+        Horário: {{ state_attr('sensor.alerta_ativo', 'horario_evento') }}.
+```
 
 ## 🔧 How It Works
 

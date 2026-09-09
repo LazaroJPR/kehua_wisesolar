@@ -248,6 +248,17 @@ SENSOR_DESCRIPTIONS: tuple[SensorEntityDescription, ...] = (
         name="Status do Inversor",
         icon="mdi:information-outline",
     ),
+    SensorEntityDescription(
+        key="active_alarm",
+        name="Alerta Ativo",
+        icon="mdi:alert-circle-outline",
+    ),
+    SensorEntityDescription(
+        key="alarm_count",
+        name="Quantidade de Alertas",
+        state_class=SensorStateClass.MEASUREMENT,
+        icon="mdi:bell-alert-outline",
+    ),
 )
 
 
@@ -298,3 +309,23 @@ class WiseSolarSensor(CoordinatorEntity, SensorEntity):
                 return self.coordinator.data.get("revenue_unit", "R$")
             return "R$"
         return self.entity_description.native_unit_of_measurement
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any] | None:
+        """Return rich diagnostics and alarm details for cards and automations."""
+        if not self.coordinator.data:
+            return None
+        data = self.coordinator.data
+        if self.entity_description.key in ("status", "active_alarm"):
+            return {
+                "motivo_alerta": data.get("active_alarm"),
+                "codigo_evento": data.get("alarm_code"),
+                "nivel_gravidade": data.get("alarm_level"),
+                "horario_evento": data.get("alarm_time"),
+                "total_alertas": data.get("alarm_count", 0),
+                "lista_eventos": data.get("alarm_list", []),
+                "modelo_inversor": data.get("device_model"),
+                "numero_serie": data.get("device_sn"),
+            }
+        return None
+

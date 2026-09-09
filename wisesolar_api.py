@@ -201,6 +201,12 @@ class WiseSolarApiClient:
             "inverter_temperature": 0.0,
             "radiator_temperature": 0.0,
             "operating_hours": 0.0,
+            "alarm_count": 0,
+            "active_alarm": "Nenhum",
+            "alarm_code": "",
+            "alarm_level": "Normal",
+            "alarm_time": "",
+            "alarm_list": [],
             "device_model": self.device_model or "SPI6000-B2",
             "device_version": self.device_version or "V1.0",
             "device_sn": self.device_sn or "",
@@ -317,5 +323,34 @@ class WiseSolarApiClient:
                                     result["device_version"] = str(val)
             except Exception as err:
                 _LOGGER.warning("Não foi possível carregar diagnóstico detalhado do inversor: %s", err)
+
+        # 4. Active alarms & event log (Unsolved Events)
+        try:
+            alarm_resp = await self.async_api_call(
+                "/app/eventlog/listUnsolvedEventLog",
+                {"stationId": self.station_id, "pageNum": "1", "pageSize": "10"},
+            )
+            if str(alarm_resp.get("code")) == "0" and alarm_resp.get("data"):
+                adata = alarm_resp["data"]
+                events = adata.get("eventList") or []
+                result["alarm_count"] = int(adata.get("total") or len(events))
+                if events:
+                    first_event = events[0]
+                    result["active_alarm"] = first_event.get("eventName") or "Alerta Ativo"
+                    result["alarm_code"] = first_event.get("eventCode") or ""
+                    result["alarm_level"] = first_event.get("levelName") or ""
+                    result["alarm_time"] = first_event.get("creatTime") or ""
+                    result["alarm_list"] = [
+                        f"[{e.get('levelName', 'Alerta')}] {e.get('eventName')} ({e.get('creatTime')})"
+                        for e in events
+                    ]
+                else:
+                    result["active_alarm"] = "Nenhum"
+                    result["alarm_code"] = ""
+                    result["alarm_level"] = "Normal"
+                    result["alarm_time"] = ""
+                    result["alarm_list"] = []
+        except Exception as err:
+            _LOGGER.debug("Erro ao consultar alertas ativos: %s", err)
 
         return result
